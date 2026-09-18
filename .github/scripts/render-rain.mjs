@@ -13,7 +13,7 @@ import { spawnSync } from 'node:child_process';
 
 const LOGIN = 'likeravine233';
 const DAYS = 120;
-const W = 1600, H = 400, M = 56, BASE = 336;
+const W = 1600, H = 400, M = 56, TOP = 148, BASE = 348;
 
 // 自适应观测窗:从最近一次活动往前的完整记录期;下限 30 天,上限 DAYS,活动期后留 7天空窗
 function viewWindow(days) {
@@ -93,18 +93,18 @@ function svg(days, p) {
   const cjk = "'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif";
   const SLOT = (W - 2 * M) / days.length;
   const cMax = Math.max(...days.map((d) => d.count), 1);
-  const hOf = (c) => 2.5 + Math.pow(c / cMax, 0.75) * 233; // 幂次曲线:小雨也有可见柱
+  const hOf = (c) => 2.5 + Math.pow(c / cMax, 0.75) * 176; // 幂次曲线:小雨也有可见柱
   const peakI = days.reduce((b, d, i) => (d.count > days[b].count ? i : b), 0);
   const total = days.reduce((s, d) => s + d.count, 0);
 
   let s = '';
-  // 方格纸:横线每 28px(主格每 140px = 10MM)+ 竖线每 140px
-  for (let y = 40; y <= BASE; y += 28) {
-    const major = (BASE - y) % 140 === 0;
+  // 方格纸:横线每 20px(主格每 100px = 10MM)+ 竖线每 100px
+  for (let y = TOP; y <= BASE; y += 20) {
+    const major = (BASE - y) % 100 === 0;
     s += `<line x1="${M}" y1="${y}" x2="${W - M}" y2="${y}" stroke="${major ? p.gridMajor : p.gridMinor}" stroke-width="${major ? 1.2 : 1}"/>\n`;
   }
-  for (let x = M; x <= W - M; x += 140) {
-    s += `<line x1="${x}" y1="40" x2="${x}" y2="${BASE}" stroke="${p.gridMinor}" stroke-width="1"/>\n`;
+  for (let x = M; x < W - M; x += 100) {
+    s += `<line x1="${x}" y1="${TOP}" x2="${x}" y2="${BASE}" stroke="${p.gridMinor}" stroke-width="1"/>\n`;
   }
 
   // 雨量柱 + 迹线包络
@@ -128,7 +128,7 @@ function svg(days, p) {
   for (const i of [0, Math.round(n * 0.25), Math.round(n * 0.5), Math.round(n * 0.75), n - 1]) {
     const x = M + i * SLOT + SLOT / 2;
     s += `<line x1="${x}" y1="${BASE}" x2="${x}" y2="${BASE + 7}" stroke="${p.trace}" stroke-width="1.4"/>\n`;
-    s += `<text x="${x.toFixed(1)}" y="${BASE + 24}" font-family="${mono}" font-size="10.5" fill="${p.anno}" text-anchor="${i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}" letter-spacing="1">${mmdd(days[i].date)}</text>\n`;
+    s += `<text x="${x.toFixed(1)}" y="${BASE + 24}" font-family="${mono}" font-size="15" fill="${p.anno}" text-anchor="${i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}" letter-spacing="1">${mmdd(days[i].date)}</text>\n`;
   }
   // 旱季标注:最长连续零提交段 ≥10 天时,在基线上方标出
   let streak = 0, dry = { len: 0, end: 0 };
@@ -139,45 +139,47 @@ function svg(days, p) {
   if (dry.len >= 10) {
     const x1 = M + (dry.end - dry.len + 1) * SLOT + 2;
     const x2 = M + (dry.end + 1) * SLOT - 2;
-    const y = BASE - 9;
-    s += `<path d="M${x1.toFixed(1)} ${y + 4} V${y} H${x2.toFixed(1)} V${y + 4}" stroke="${p.anno}" stroke-width="1" fill="none" opacity=".8"/>\n`;
-    s += `<text x="${((x1 + x2) / 2).toFixed(1)}" y="${y - 5}" font-family="${mono}" font-size="10" fill="${p.anno}" text-anchor="middle" letter-spacing="2">DRY SPELL · ${dry.len}D</text>\n`;
+    const y = BASE - 12;
+    s += `<path d="M${x1.toFixed(1)} ${y + 5} V${y} H${x2.toFixed(1)} V${y + 5}" stroke="${p.anno}" stroke-width="1" fill="none" opacity=".8"/>\n`;
+    s += `<text x="${((x1 + x2) / 2).toFixed(1)}" y="${y - 8}" font-family="${mono}" font-size="15" fill="${p.anno}" text-anchor="middle" letter-spacing="2">DRY SPELL · ${dry.len}D</text>\n`;
   }
-  // 纵轴刻度值(每 140px = 10 MM)
+  // 纵轴刻度值(每 100px = 10 MM)
   for (const [i, lbl] of [[0, '0'], [1, '10'], [2, '20 MM']]) {
-    const y = BASE - i * 140;
-    s += `<text x="${M - 10}" y="${y + 4}" font-family="${mono}" font-size="10.5" fill="${p.anno}" text-anchor="end" letter-spacing="1">${lbl}</text>\n`;
+    const y = BASE - i * 100;
+    s += `<text x="${M - 8}" y="${y + 4.5}" font-family="${mono}" font-size="13.5" fill="${p.anno}" text-anchor="end" letter-spacing=".5">${lbl}</text>\n`;
   }
 
-  // 左上:站名块
-  s += `<text x="${M}" y="66" font-family="${mono}" font-size="17" font-weight="700" fill="${p.ink}" letter-spacing="4.5">RAINYWATCH</text>\n`;
-  s += `<text x="${M + 148}" y="66" font-family="${mono}" font-size="17" fill="${p.anno}" letter-spacing="4.5">· METEOROLOGICAL STATION</text>\n`;
-  s += `<text x="${M}" y="90" font-family="${mono}" font-size="10.5" fill="${p.anno}" letter-spacing="3">OBSERVER @${LOGIN.toUpperCase()} — ${total} COMMITS ON RECORD</text>\n`;
+  // 左上:站名报头(大字站名 + 附属行,信头双线收底)
+  s += `<text x="${M}" y="70" font-family="${mono}" font-size="46" font-weight="700" fill="${p.ink}" letter-spacing="8">RAINYWATCH<tspan dx="20" font-size="19" font-weight="400" fill="${p.anno}" letter-spacing="4.5">· METEOROLOGICAL STATION</tspan></text>\n`;
+  s += `<text x="${M}" y="100" font-family="${mono}" font-size="17" fill="${p.anno}" letter-spacing="3">OBSERVER @${LOGIN.toUpperCase()} — ${total} COMMITS ON RECORD</text>\n`;
+  s += `<line x1="${M}" y1="114" x2="${W - M}" y2="114" stroke="${p.ink}" stroke-width="2" opacity=".85"/>\n`;
+  s += `<line x1="${M}" y1="119" x2="${W - M}" y2="119" stroke="${p.anno}" stroke-width=".75" opacity=".8"/>\n`;
 
   // 右上:图纸编号(每天一张新观测纸)
-  s += `<text x="${W - M}" y="62" font-family="${mono}" font-size="12" fill="${p.ink}" text-anchor="end" letter-spacing="3">SHEET NO. ${mmdd(shift(0))}</text>\n`;
-  s += `<text x="${W - M}" y="84" font-family="${mono}" font-size="10.5" fill="${p.anno}" text-anchor="end" letter-spacing="3">PRECIPITATION: COMMITS · 1 BAR = 1 DAY</text>\n`;
+  s += `<text x="${W - M}" y="60" font-family="${mono}" font-size="19" fill="${p.ink}" text-anchor="end" letter-spacing="3">SHEET NO. ${mmdd(shift(0))}</text>\n`;
+  s += `<text x="${W - M}" y="88" font-family="${mono}" font-size="14.5" fill="${p.anno}" text-anchor="end" letter-spacing="2">PRECIPITATION: COMMITS · 1 BAR = 1 DAY</text>\n`;
 
-  // 峰顶虹的观测标注(峰靠右时标注翻到左侧)
+  // 峰顶虹的观测标注:固定行于信头线与图纸之间,按峰位与文字宽度自动选侧
   const px = M + peakI * SLOT + SLOT / 2;
   const pyTop = BASE - hOf(days[peakI].count) - 5;
-  const left = px > W - 460;
-  const dir = left ? -1 : 1;
-  s += `<path d="M${(px + dir * 5).toFixed(1)} ${(pyTop - 5).toFixed(1)} L${(px + dir * 56).toFixed(1)} ${(pyTop - 46).toFixed(1)} H${(px + dir * 74).toFixed(1)}" stroke="${p.anno}" stroke-width="1.2" fill="none"/>\n`;
-  if (left) {
-    s += `<text x="${(px - 82).toFixed(1)}" y="${(pyTop - 47).toFixed(1)}" font-family="${mono}" font-size="11" fill="${p.ink}" text-anchor="end" letter-spacing="2.5">RAINBOW, OBSERVED — ${days[peakI].count} COMMITS ON ${mmdd(days[peakI].date)}</text>\n`;
-    s += `<rect x="${(px - 74).toFixed(1)}" y="${(pyTop - 54).toFixed(1)}" width="40" height="3" fill="url(#bow)"/>\n`;
+  const annoText = `RAINBOW, OBSERVED — ${days[peakI].count} COMMITS ON ${mmdd(days[peakI].date)}`;
+  const lane = 132, annoW = annoText.length * 11.9;
+  const dir = px + 100 + annoW <= W - M ? 1 : -1;
+  s += `<path d="M${(px + dir * 5).toFixed(1)} ${(pyTop - 8).toFixed(1)} L${(px + dir * 44).toFixed(1)} ${lane} H${(px + dir * 58).toFixed(1)}" stroke="${p.anno}" stroke-width="1.2" fill="none"/>\n`;
+  if (dir === 1) {
+    s += `<rect x="${(px + 62).toFixed(1)}" y="${lane - 1.5}" width="34" height="3" fill="url(#bow)"/>\n`;
+    s += `<text x="${(px + 104).toFixed(1)}" y="${lane + 6}" font-family="${mono}" font-size="15.5" fill="${p.ink}" letter-spacing="2.5">${annoText}</text>\n`;
   } else {
-    s += `<rect x="${(px + 80).toFixed(1)}" y="${(pyTop - 54).toFixed(1)}" width="40" height="3" fill="url(#bow)"/>\n`;
-    s += `<text x="${(px + 128).toFixed(1)}" y="${(pyTop - 47).toFixed(1)}" font-family="${mono}" font-size="11" fill="${p.ink}" letter-spacing="2.5">RAINBOW, OBSERVED — ${days[peakI].count} COMMITS ON ${mmdd(days[peakI].date)}</text>\n`;
+    s += `<rect x="${(px - 96).toFixed(1)}" y="${lane - 1.5}" width="34" height="3" fill="url(#bow)"/>\n`;
+    s += `<text x="${(px - 104).toFixed(1)}" y="${lane + 6}" font-family="${mono}" font-size="15.5" fill="${p.ink}" text-anchor="end" letter-spacing="2.5">${annoText}</text>\n`;
   }
 
   // 「小暴雨」印章:盖在雨峰对侧的空白处,微旋转
   const sealRight = peakI <= n * 0.6;
-  const sx = sealRight ? 1472 : 60, rot = sealRight ? -4 : 3, scx = sealRight ? 1506 : 94;
-  s += `<g transform="rotate(${rot} ${scx} 272)" opacity=".92">
-    <rect x="${sx}" y="240" width="68" height="64" rx="7" stroke="${p.seal}" stroke-width="2.4" fill="none"/>
-    <text x="${scx + 1.5}" y="280" font-family="${cjk}" font-size="21" font-weight="600" fill="${p.seal}" text-anchor="middle" letter-spacing="2">小暴雨</text>
+  const sx = sealRight ? 1442 : 62, rot = sealRight ? -4 : 3, scx = sealRight ? 1488 : 108;
+  s += `<g transform="rotate(${rot} ${scx} 278)" opacity=".92">
+    <rect x="${sx}" y="236" width="92" height="84" rx="8" stroke="${p.seal}" stroke-width="3" fill="none"/>
+    <text x="${scx}" y="289" font-family="${cjk}" font-size="29" font-weight="600" fill="${p.seal}" text-anchor="middle" letter-spacing="1.5">小暴雨</text>
   </g>\n`;
 
   // 四角裁切标记
