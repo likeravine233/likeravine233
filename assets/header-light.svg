@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 400" width="1600" height="400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFE"/><stop offset="1" stop-color="#F2F6FA"/>
+    </linearGradient>
+    <linearGradient id="bow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f87171"/><stop offset=".2" stop-color="#fbbf24"/>
+      <stop offset=".4" stop-color="#a3e635"/><stop offset=".6" stop-color="#34d399"/>
+      <stop offset=".8" stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="400" fill="url(#bg)"/>
+  <line x1="56" y1="40" x2="1544" y2="40" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="68" x2="1544" y2="68" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="96" x2="1544" y2="96" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="124" x2="1544" y2="124" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="152" x2="1544" y2="152" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="180" x2="1544" y2="180" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="208" x2="1544" y2="208" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="236" x2="1544" y2="236" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="264" x2="1544" y2="264" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="292" x2="1544" y2="292" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="320" x2="1544" y2="320" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="56" y1="40" x2="56" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="196" y1="40" x2="196" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="336" y1="40" x2="336" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="476" y1="40" x2="476" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="616" y1="40" x2="616" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="756" y1="40" x2="756" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="896" y1="40" x2="896" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="1036" y1="40" x2="1036" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="1176" y1="40" x2="1176" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="1316" y1="40" x2="1316" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<line x1="1456" y1="40" x2="1456" y2="336" stroke="#EAEFF5" stroke-width="1"/>
+<g>
+<rect x="71.8" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="121.4" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="171.0" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="220.6" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="270.2" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="319.8" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="369.4" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="419.0" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="468.6" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="518.2" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="567.8" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="617.4" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="667.0" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="716.6" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="766.2" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="815.8" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="865.4" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="915.0" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="964.6" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="1014.2" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="1063.8" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="1113.4" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="1163.0" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="1212.6" y="251.1" width="18.0" height="84.9" fill="#4A77AC" opacity=".72"/>
+<rect x="1262.2" y="111.5" width="18.0" height="224.5" fill="#4A77AC" opacity=".72"/>
+<rect x="1311.8" y="208.2" width="18.0" height="127.8" fill="#4A77AC" opacity=".72"/>
+<rect x="1361.4" y="100.5" width="18.0" height="235.5" fill="#4A77AC" opacity=".72"/>
+<rect x="1359.4" y="95.5" width="22.0" height="2.6" fill="url(#bow)"/>
+<rect x="1411.0" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+<rect x="1460.6" y="236.1" width="18.0" height="99.9" fill="#4A77AC" opacity=".72"/>
+<rect x="1510.2" y="333.5" width="18.0" height="2.5" fill="#4A77AC" opacity=".72"/>
+</g>
+<polyline points="80.8,333.5 130.4,333.5 180.0,333.5 229.6,333.5 279.2,333.5 328.8,333.5 378.4,333.5 428.0,333.5 477.6,333.5 527.2,333.5 576.8,333.5 626.4,333.5 676.0,333.5 725.6,333.5 775.2,333.5 824.8,333.5 874.4,333.5 924.0,333.5 973.6,333.5 1023.2,333.5 1072.8,333.5 1122.4,333.5 1172.0,333.5 1221.6,251.1 1271.2,111.5 1320.8,208.2 1370.4,104.4 1420.0,333.5 1469.6,236.1 1519.2,333.5" fill="none" stroke="#33639F" stroke-width="1.5" opacity=".95"/>
+<line x1="56" y1="336" x2="1544" y2="336" stroke="#33639F" stroke-width="1.6"/>
+<line x1="80.8" y1="336" x2="80.8" y2="343" stroke="#33639F" stroke-width="1.4"/>
+<text x="80.8" y="360" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="start" letter-spacing="1">08/20</text>
+<line x1="477.6" y1="336" x2="477.6" y2="343" stroke="#33639F" stroke-width="1.4"/>
+<text x="477.6" y="360" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="middle" letter-spacing="1">08/28</text>
+<line x1="824.8" y1="336" x2="824.8" y2="343" stroke="#33639F" stroke-width="1.4"/>
+<text x="824.8" y="360" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="middle" letter-spacing="1">09/04</text>
+<line x1="1221.6" y1="336" x2="1221.6" y2="343" stroke="#33639F" stroke-width="1.4"/>
+<text x="1221.6" y="360" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="middle" letter-spacing="1">09/12</text>
+<line x1="1519.2" y1="336" x2="1519.2" y2="343" stroke="#33639F" stroke-width="1.4"/>
+<text x="1519.2" y="360" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="end" letter-spacing="1">09/18</text>
+<path d="M58.0 331 V327 H1194.8 V331" stroke="#8DA0B8" stroke-width="1" fill="none" opacity=".8"/>
+<text x="626.4" y="322" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10" fill="#8DA0B8" text-anchor="middle" letter-spacing="2">DRY SPELL · 23D</text>
+<text x="46" y="340" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="end" letter-spacing="1">0</text>
+<text x="46" y="200" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="end" letter-spacing="1">10</text>
+<text x="46" y="60" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="end" letter-spacing="1">20 MM</text>
+<text x="56" y="66" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="17" font-weight="700" fill="#223550" letter-spacing="4.5">RAINYWATCH</text>
+<text x="204" y="66" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="17" fill="#8DA0B8" letter-spacing="4.5">· METEOROLOGICAL STATION</text>
+<text x="56" y="90" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" letter-spacing="3">OBSERVER @LIKERAVINE233 — 47 COMMITS ON RECORD</text>
+<text x="1544" y="62" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="12" fill="#223550" text-anchor="end" letter-spacing="3">SHEET NO. 09/18</text>
+<text x="1544" y="84" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="10.5" fill="#8DA0B8" text-anchor="end" letter-spacing="3">PRECIPITATION: COMMITS · 1 BAR = 1 DAY</text>
+<path d="M1365.4 90.5 L1314.4 49.5 H1296.4" stroke="#8DA0B8" stroke-width="1.2" fill="none"/>
+<text x="1288.4" y="48.5" font-family="'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace" font-size="11" fill="#223550" text-anchor="end" letter-spacing="2.5">RAINBOW, OBSERVED — 16 COMMITS ON 09/15</text>
+<rect x="1296.4" y="41.5" width="40" height="3" fill="url(#bow)"/>
+<g transform="rotate(3 94 272)" opacity=".92">
+    <rect x="60" y="240" width="68" height="64" rx="7" stroke="#B54343" stroke-width="2.4" fill="none"/>
+    <text x="95.5" y="280" font-family="'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif" font-size="21" font-weight="600" fill="#B54343" text-anchor="middle" letter-spacing="2">小暴雨</text>
+  </g>
+<path d="M42 26 H26 V42" stroke="#8DA0B8" stroke-width="1.2" fill="none" opacity=".55"/>
+<path d="M1558 26 H1574 V42" stroke="#8DA0B8" stroke-width="1.2" fill="none" opacity=".55"/>
+<path d="M42 374 H26 V358" stroke="#8DA0B8" stroke-width="1.2" fill="none" opacity=".55"/>
+<path d="M1558 374 H1574 V358" stroke="#8DA0B8" stroke-width="1.2" fill="none" opacity=".55"/>
+</svg>

@@ -1,0 +1,20 @@
+name: rain-gauge
+# 每天 06:20(北京时间)重绘一张雨量观测纸,写入 Gist(不污染本仓库历史与贡献绿格)
+on:
+  schedule:
+    - cron: '20 22 * * *'   # UTC 22:20 = 北京 06:20
+  workflow_dispatch: {}
+permissions: {}
+jobs:
+  redraw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: redraw & write to gist
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: ${{ vars.GIST_ID }}
+        run: node .github/scripts/render-rain.mjs
