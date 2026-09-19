@@ -14,6 +14,8 @@ import { spawnSync } from 'node:child_process';
 const LOGIN = 'likeravine233';
 const DAYS = 120;
 const W = 1600, H = 400, M = 56, TOP = 148, BASE = 348;
+// 观测站所在城市(顶部预报栏的数据源);换城市改这一行即可
+const CITY = { name: 'NANJING', lat: 32.06, lon: 118.8, tz: 'Asia/Shanghai' };
 
 // 自适应观测窗:从最近一次活动往前的完整记录期;下限 30 天,上限 DAYS,活动期后留 7天空窗
 function viewWindow(days) {
@@ -35,7 +37,12 @@ function mulberry32(a) {
 const iso = (d) => d.toISOString().slice(0, 10);
 const shift = (days) => iso(new Date(Date.now() - days * 864e5));
 
-// 合成一场暴雨(前峰两阵 + 主峰 + 长尾),日期对齐到最近 DAYS 天
+// 合成一场暴雨(前峰两阵 + 主峰 + 长尾),日期对齐到最近 DAYS 天;演示天气覆盖雨/云/雷三种图标
+const DEMO_WX = [
+  { wday: 'FRI', code: 61, hi: 26, lo: 18 },
+  { wday: 'SAT', code: 2, hi: 24, lo: 17 },
+  { wday: 'SUN', code: 95, hi: 22, lo: 16 },
+];
 function demoData() {
   const rnd = mulberry32(97);
   const gauss = (x, mu, sig) => Math.exp(-((x - mu) ** 2) / (2 * sig * sig));
@@ -75,6 +82,29 @@ async function realData() {
   return flat.map((d) => ({ date: d.date, count: d.contributionCount }));
 }
 
+// 天气:Open-Meteo 三日预报(免 key);失败重试一次后整栏省略,不影响主图
+async function fetchWeather() {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${CITY.lat}&longitude=${CITY.lon}` +
+    `&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=${encodeURIComponent(CITY.tz)}&forecast_days=3`;
+  for (let t = 0; t < 2; t++) {
+    try {
+      const res = await fetch(url, { headers: { 'User-Agent': 'rainywatch-rain-gauge' } });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const d = (await res.json()).daily;
+      const WD = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+      return d.time.map((date, i) => ({
+        wday: WD[new Date(date + 'T12:00:00Z').getUTCDay()],
+        code: d.weathercode[i],
+        hi: Math.round(d.temperature_2m_max[i]),
+        lo: Math.round(d.temperature_2m_min[i]),
+      }));
+    } catch (e) {
+      if (t === 1) { console.log('weather: 预报栏省略(' + e.message + ')'); return null; }
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+  }
+}
+
 // ---------- 绘制 ----------
 const palettes = {
   dark: {
@@ -88,7 +118,40 @@ const palettes = {
 };
 const mmdd = (date) => date.slice(5).replace('-', '/');
 
-function svg(days, p) {
+// WMO 天气码 → 线描图标类别
+function wmoKind(code) {
+  if (code <= 1) return 'sun';
+  if (code === 2) return 'suncloud';
+  if (code === 3 || code === 45 || code === 48) return 'cloud';
+  if (code >= 51 && code <= 57) return 'drizzle';
+  if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return 'rain';
+  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return 'snow';
+  if (code >= 95) return 'storm';
+  return 'cloud';
+}
+
+// 天气线描图标(与四角裁切标记同一笔触,24×24 局部坐标,不引入第二彩色)
+function weatherGlyph(kind, color) {
+  const st = `stroke="${color}" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`;
+  const cloud = 'M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z';
+  const raised = `transform="translate(1.8 -1.2) scale(.85)"`;
+  const rays = (cx, cy, r1, r2) => Array.from({ length: 8 }, (_, k) => {
+    const a = (k * Math.PI) / 4, c = Math.cos(a), s = Math.sin(a);
+    return `<line x1="${(cx + c * r1).toFixed(1)}" y1="${(cy + s * r1).toFixed(1)}" x2="${(cx + c * r2).toFixed(1)}" y2="${(cy + s * r2).toFixed(1)}"/>`;
+  }).join('');
+  const sun = (cx, cy, r) => `<circle cx="${cx}" cy="${cy}" r="${r}"/>${rays(cx, cy, r + 1.8, r + 3.4)}`;
+  let inner = `<path d="${cloud}" transform="translate(1.8 .8) scale(.85)"/>`;
+  if (kind === 'sun') inner = sun(12, 12, 4.2);
+  else if (kind === 'suncloud') inner = sun(7.5, 7, 2.8) + `<path d="${cloud}" transform="translate(4.6 4.2) scale(.78)"/>`;
+  else if (kind === 'rain') inner = `<path d="${cloud}" ${raised}/><path d="M8.6 17.8l-1.5 3.2M12.6 17.8l-1.5 3.2M16.6 17.8l-1.5 3.2"/>`;
+  else if (kind === 'drizzle') inner = `<path d="${cloud}" ${raised}/><path d="M8.8 18.2h1.9M12.8 18.2h1.9M10.8 20.8h1.9"/>`;
+  else if (kind === 'snow') inner = `<path d="${cloud}" ${raised}/><g fill="${color}" stroke="none"><circle cx="8.4" cy="18.6" r="1"/><circle cx="12.4" cy="18.6" r="1"/><circle cx="16.4" cy="18.6" r="1"/></g>`;
+  else if (kind === 'storm') inner = `<path d="${cloud}" ${raised}/><path d="M12.9 15.6l-2.4 4h3l-2.4 4"/>`;
+  else if (kind === 'fog') inner = `<path d="${cloud}" ${raised}/><path d="M6.5 19.6h11M8.5 22h7"/>`;
+  return `<g ${st}>${inner}</g>`;
+}
+
+function svg(days, p, wx) {
   const mono = "'SF Mono','Cascadia Mono','JetBrains Mono',Consolas,Menlo,monospace";
   const cjk = "'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif";
   const SLOT = (W - 2 * M) / days.length;
@@ -130,6 +193,8 @@ function svg(days, p) {
     s += `<line x1="${x}" y1="${BASE}" x2="${x}" y2="${BASE + 7}" stroke="${p.trace}" stroke-width="1.4"/>\n`;
     s += `<text x="${x.toFixed(1)}" y="${BASE + 24}" font-family="${mono}" font-size="15" fill="${p.anno}" text-anchor="${i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}" letter-spacing="1">${mmdd(days[i].date)}</text>\n`;
   }
+  // 图例置于图纸右下(日期轴下方,给顶部预报栏让位)
+  s += `<text x="${W - M}" y="391" font-family="${mono}" font-size="13.5" fill="${p.anno}" text-anchor="end" letter-spacing="2">PRECIPITATION: COMMITS · 1 BAR = 1 DAY</text>\n`;
   // 旱季标注:最长连续零提交段 ≥10 天时,在基线上方标出
   let streak = 0, dry = { len: 0, end: 0 };
   days.forEach((d, i) => {
@@ -157,7 +222,18 @@ function svg(days, p) {
 
   // 右上:图纸编号(每天一张新观测纸)
   s += `<text x="${W - M}" y="60" font-family="${mono}" font-size="19" fill="${p.ink}" text-anchor="end" letter-spacing="3">SHEET NO. ${mmdd(shift(0))}</text>\n`;
-  s += `<text x="${W - M}" y="88" font-family="${mono}" font-size="14.5" fill="${p.anno}" text-anchor="end" letter-spacing="2">PRECIPITATION: COMMITS · 1 BAR = 1 DAY</text>\n`;
+
+  // 顶部空白带:本市三日展望(生成时从 Open-Meteo 烘焙;无数据则整栏省略)
+  if (wx && wx.length === 3) {
+    const x0 = 880, segW = 118, gap = 16;
+    s += `<text x="${x0}" y="54" font-family="${mono}" font-size="11.5" fill="${p.anno}" letter-spacing="2">OUTLOOK · ${CITY.name}</text>\n`;
+    wx.forEach((w, i) => {
+      const sx = x0 + i * (segW + gap);
+      s += `<text x="${sx}" y="78" font-family="${mono}" font-size="12.5" fill="${p.ink}" letter-spacing="1.5">${w.wday}</text>\n`;
+      s += `<g transform="translate(${sx + 34} 59) scale(.82)">${weatherGlyph(wmoKind(w.code), p.anno)}</g>\n`;
+      s += `<text x="${sx + 58}" y="78" font-family="${mono}" font-size="13" fill="${p.anno}" letter-spacing=".5">${w.hi}°/${w.lo}°</text>\n`;
+    });
+  }
 
   // 峰顶虹的观测标注:固定行于信头线与图纸之间,按峰位与文字宽度自动选侧
   const px = M + peakI * SLOT + SLOT / 2;
@@ -212,17 +288,19 @@ async function main() {
     const days = demoData();
     for (const [name, p] of Object.entries(palettes)) {
       const f = `header-${name}.svg`;
-      fs.writeFileSync(path.join(outDir, f), svg(days, p));
-      files[`header-${name}.svg`] = { content: svg(days, p) };
+      fs.writeFileSync(path.join(outDir, f), svg(days, p, DEMO_WX));
+      files[`header-${name}.svg`] = { content: svg(days, p, DEMO_WX) };
     }
     console.log('wrote repo/assets/header-*.svg(合成暴雨)');
     return;
   }
   const days = viewWindow(await realData());
+  const wx = await fetchWeather();
   const peak = days.reduce((b, d) => (d.count > b.count ? d : b), days[0]);
   console.log(`数据:近 ${days.length} 天,共 ${days.reduce((s, d) => s + d.count, 0)} commits,峰值 ${peak.count}(${peak.date})`);
+  if (wx) console.log(`weather: ${CITY.name} ` + wx.map((w) => `${w.wday} ${w.hi}°/${w.lo}°`).join(', '));
   for (const [name, p] of Object.entries(palettes)) {
-    files[`header-${name}.svg`] = { content: svg(days, p) };
+    files[`header-${name}.svg`] = { content: svg(days, p, wx) };
   }
   if (process.argv.includes('--gh') || process.argv.includes('--local')) { // 本地预览真实数据
     for (const [name, payload] of Object.entries(files)) {
